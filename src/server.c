@@ -6,7 +6,7 @@
 /*   By: rde-migu <rde-migu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:30:38 by rde-migu          #+#    #+#             */
-/*   Updated: 2024/06/26 22:30:12 by rde-migu         ###   ########.fr       */
+/*   Updated: 2024/07/01 19:38:26 by rde-migu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	handle_signal(int signal)
 	else
 		actual_char <<= 1;
 }
-
 
 int	main(void)
 {
