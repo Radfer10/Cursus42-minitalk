@@ -1,54 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rde-migu <rde-migu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/26 20:30:38 by rde-migu          #+#    #+#             */
-/*   Updated: 2024/07/03 23:09:42 by rde-migu         ###   ########.fr       */
+/*   Created: 2024/07/03 23:15:34 by rde-migu          #+#    #+#             */
+/*   Updated: 2024/07/03 23:52:45 by rde-migu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
 
-void	handle_signal(int signal)
-{
-	static unsigned char	actual_char;
-	static int				bit_index;
+#define END_TRANSMISSION '\0'
 
-	actual_char |= (signal == SIGUSR1);
-	bit_index++;
-	if (bit_index == 8)
-	{
-		if (actual_char == END_TRANSMISSION)
-			ft_printf("\n");
-		else
-			ft_printf("%c", actual_char);
-		fflush(stdout);
-		bit_index = 0;
-		actual_char = 0;
-	}
-	else
-		actual_char <<= 1;
-}
-
-int	main(void)
+void handle_signal(int sig, siginfo_t *info, void *context)
 {
-	printf("%d\n", getpid());
-	signal(SIGUSR1, handle_signal);
-	signal(SIGUSR2, handle_signal);
-	while (1)
-		pause();
-	return (0);
-}
+    (void)context;
 
-/*void handle_signal(int signal)
-{
     static unsigned char current_char;
     static int bit_index;
+    __pid_t client_pid;
 
-    current_char |= (signal == SIGUSR1);
+    client_pid = info->si_pid;
+
+    current_char |= (sig == SIGUSR1);
     bit_index++;
     if (bit_index == 8)
     {
@@ -62,16 +38,21 @@ int	main(void)
     }
     else
         current_char <<= 1;
+    kill(client_pid, SIGUSR1);
 }
 
-int main(void)
+
+int	main(void)
 {
-    printf("PID del servidor: %d\n", getpid());
-    signal(SIGUSR1, handle_signal);
-    signal(SIGUSR2, handle_signal);
-    while (1)
-        pause();
-    return 0;
-}*/
+	struct sigaction	sa;
 
-
+	sa.sa_sigaction = &handle_signal;
+	sa.sa_flags = SA_SIGINFO;
+	sigemptyset(&sa.sa_mask);
+	printf("%d\n", getpid());
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
+	while (1)
+		pause();
+	return (0);
+}

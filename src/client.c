@@ -6,11 +6,12 @@
 /*   By: rde-migu <rde-migu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:57:04 by rde-migu          #+#    #+#             */
-/*   Updated: 2024/07/01 21:00:10 by rde-migu         ###   ########.fr       */
+/*   Updated: 2024/07/03 23:35:00 by rde-migu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
+
 
 void	send_signal(int pid, unsigned char character)
 {
@@ -27,16 +28,8 @@ void	send_signal(int pid, unsigned char character)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		usleep(100);
+		usleep(400);
 	}
-}
-
-void	handle_confirm_recipt(int signal)
-{
-	if (signal == SIGUSR1)
-		ft_printf("Received bit 1\n");
-	else if (signal == SIGUSR2)
-		ft_printf("Received bit 0\n");
 }
 
 int	main(int argc, char *argv[])
@@ -45,8 +38,6 @@ int	main(int argc, char *argv[])
 	const char	*menssage;
 	int			i;
 
-	signal(SIGUSR1, handle_confirm_recipt);
-	signal(SIGUSR2, handle_confirm_recipt);
 	if (argc != 3)
 	{
 		ft_printf("Introducir Argumentos: %s <pid> <menssage>\n", argv[0]);
@@ -60,3 +51,43 @@ int	main(int argc, char *argv[])
 	send_signal(pid_server, '\0');
 	return (0);
 }
+
+
+/*void send_signal(int pid, unsigned char character)
+{
+    int i;
+    unsigned char temp_char;
+
+    i = 8;
+    temp_char = character;
+    while (i > 0)
+    {
+        i--;
+        temp_char = character >> i;
+        if (temp_char % 2 == 0)
+            kill(pid, SIGUSR2);
+        else
+            kill(pid, SIGUSR1);
+        usleep(500); // Reduce el tiempo de espera a 100 microsegundos
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    __pid_t server_pid;
+    const char *message;
+    int i;
+
+    if (argc != 3)
+    {
+        printf("Usage: %s <pid> <message>\n", argv[0]);
+        exit(0);
+    }
+    server_pid = atoi(argv[1]);
+    message = argv[2];
+    i = 0;
+    while (message[i])
+        send_signal(server_pid, message[i++]);
+    send_signal(server_pid, '\0');
+    return 0;
+}*/
