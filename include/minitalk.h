@@ -6,7 +6,7 @@
 /*   By: rde-migu <rde-migu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:57:25 by rde-migu          #+#    #+#             */
-/*   Updated: 2024/07/03 23:50:13 by rde-migu         ###   ########.fr       */
+/*   Updated: 2024/07/05 01:26:21 by rde-migu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,11 @@
 # include <string.h>
 # include <unistd.h>
 
-volatile sig_atomic_t	received_signal = 0;
-volatile sig_atomic_t bit_received = 0;
+typedef struct s_signal_info
+{
+	volatile sig_atomic_t	bit_received;
+}							t_signal_info;
 
+t_signal_info				g_signal_info;
 # define END_TRANSMISSION '\0'
 #endif

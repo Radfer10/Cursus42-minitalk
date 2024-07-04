@@ -6,7 +6,7 @@
 /*   By: rde-migu <rde-migu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 23:15:28 by rde-migu          #+#    #+#             */
-/*   Updated: 2024/07/03 23:52:23 by rde-migu         ###   ########.fr       */
+/*   Updated: 2024/07/05 01:27:57 by rde-migu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	handler_confirmed(int sig)
 {
-    (void)sig;
-	bit_received = 1;
+	(void)sig;
+	g_signal_info.bit_received = 1;
 }
 
 void	send_signal(int pid, unsigned char character)
@@ -33,9 +33,9 @@ void	send_signal(int pid, unsigned char character)
 			kill(pid, SIGUSR2);
 		else
 			kill(pid, SIGUSR1);
-		while (!bit_received)
+		while (!g_signal_info.bit_received)
 			usleep(50);
-		bit_received = 0;
+		g_signal_info.bit_received = 0;
 	}
 }
 
